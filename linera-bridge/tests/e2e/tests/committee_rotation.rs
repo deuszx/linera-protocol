@@ -27,8 +27,7 @@ const TEST_VALIDATOR_PUBLIC_KEY: &str =
 /// Hex-encoded BCS of `AccountPublicKey::Ed25519([1u8; 32])`.
 /// Layout: `00` (Ed25519 variant tag) + 32 bytes of 0x01.
 /// Used as the validator's `--account-key` (only stored in the committee, never verified).
-const TEST_ACCOUNT_KEY: &str =
-    "000101010101010101010101010101010101010101010101010101010101010101";
+const TEST_ACCOUNT_KEY: &str = "000101010101010101010101010101010101010101010101010101010101010101";
 
 /// Queries the current epoch from the LightClient contract on Anvil.
 async fn query_current_epoch() -> Result<u32, String> {

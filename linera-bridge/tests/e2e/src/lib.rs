@@ -172,10 +172,7 @@ pub async fn init_test_wallet(
 }
 
 /// Starts docker compose stack with pre-cleanup of stale state.
-pub async fn start_compose(
-    compose_file: &std::path::Path,
-    project_name: &str,
-) -> DockerCompose {
+pub async fn start_compose(compose_file: &std::path::Path, project_name: &str) -> DockerCompose {
     let compose_file_str = compose_file
         .to_str()
         .expect("compose file path should be valid UTF-8");
