@@ -19,6 +19,7 @@ alloy = { git = "https://github.com/alloy-rs/alloy", tag = "v1.0.42", default-fe
 ] }
 bcs = "0.1.6"
 linera-base = { path = "../../../linera-base" }
+rand = { version = "0.8", default-features = false, features = ["std_rng"] }
 linera-client = { path = "../../../linera-client", default-features = false, features = ["wasmer"] }
 linera-core = { path = "../../../linera-core", default-features = false, features = ["wasmer"] }
 linera-execution = { path = "../../../linera-execution" }

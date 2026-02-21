@@ -26,12 +26,6 @@ pub const LIGHT_CLIENT_ADDRESS: &str = "5FbDB2315678afecb367f032d93F642f64180aa3
 pub const ANVIL_PRIVATE_KEY: &str =
     "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
-/// Directory for test wallet (separate from the faucet's wallet).
-pub const TEST_WALLET_DIR: &str = "/tmp/test-wallet";
-
-/// Port for the node service started inside the container.
-pub const NODE_SERVICE_PORT: u16 = 9090;
-
 /// Returns the path to the compose file relative to this crate's manifest dir.
 pub fn compose_file_path() -> std::path::PathBuf {
     std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -134,36 +128,6 @@ pub async fn create_extra_wallet(
             "cp {WALLET_DIR}/wallet_0.json {WALLET_DIR}/wallet_{EXTRA_WALLET_ID}.json && \
              cp {WALLET_DIR}/keystore_0.json {WALLET_DIR}/keystore_{EXTRA_WALLET_ID}.json && \
              cp -r {WALLET_DIR}/client_0.db {WALLET_DIR}/client_{EXTRA_WALLET_ID}.db"
-        ),
-        project_name,
-        compose_file,
-    )
-    .await;
-}
-
-/// Environment variables for the test wallet (initialized via faucet).
-pub fn test_wallet_env() -> String {
-    format!(
-        "LINERA_WALLET={TEST_WALLET_DIR}/wallet.json \
-         LINERA_KEYSTORE={TEST_WALLET_DIR}/keystore.json \
-         LINERA_STORAGE=rocksdb:{TEST_WALLET_DIR}/client.db"
-    )
-}
-
-/// Initializes a fresh wallet via the faucet inside the container.
-pub async fn init_test_wallet(
-    compose: &DockerCompose,
-    project_name: &str,
-    compose_file: &std::path::Path,
-) {
-    let wallet_env = test_wallet_env();
-    eprintln!("Initializing test wallet via faucet...");
-    exec_ok(
-        compose,
-        "linera-network",
-        &format!(
-            "mkdir -p {TEST_WALLET_DIR} && \
-             {wallet_env} ./linera wallet init --faucet http://localhost:8080"
         ),
         project_name,
         compose_file,

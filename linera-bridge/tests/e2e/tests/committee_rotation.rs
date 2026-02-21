@@ -7,6 +7,7 @@
 use std::time::{Duration, Instant};
 
 use alloy::{primitives::Address, providers::ProviderBuilder, sol};
+use linera_base::crypto::{AccountPublicKey, ValidatorKeypair};
 use linera_bridge_e2e::{
     compose_file_path, create_extra_wallet, dump_compose_logs, exec_ok, extra_wallet_env,
     start_compose, LIGHT_CLIENT_ADDRESS,
@@ -18,16 +19,6 @@ sol! {
         function currentEpoch() external view returns (uint32);
     }
 }
-
-/// Well-known secp256k1 compressed public key (generator point, private key = 1).
-/// Used as the validator's network-identity key for `--public-key`.
-const TEST_VALIDATOR_PUBLIC_KEY: &str =
-    "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798";
-
-/// Hex-encoded BCS of `AccountPublicKey::Ed25519([1u8; 32])`.
-/// Layout: `00` (Ed25519 variant tag) + 32 bytes of 0x01.
-/// Used as the validator's `--account-key` (only stored in the committee, never verified).
-const TEST_ACCOUNT_KEY: &str = "000101010101010101010101010101010101010101010101010101010101010101";
 
 /// Queries the current epoch from the LightClient contract on Anvil.
 async fn query_current_epoch() -> Result<u32, String> {
@@ -70,6 +61,12 @@ async fn test_committee_rotation_updates_evm_light_client() {
 
     // Trigger committee rotation by adding a fake validator.
     eprintln!("Triggering committee rotation...");
+    let mut rng = rand::rngs::OsRng;
+    let validator_keypair = ValidatorKeypair::generate_from(&mut rng);
+    let validator_public_key = validator_keypair.public_key;
+    let account_keypair = ValidatorKeypair::generate_from(&mut rng);
+    let account_key = AccountPublicKey::Secp256k1(account_keypair.public_key);
+
     let wallet_env = extra_wallet_env();
     exec_ok(
         &compose,
@@ -77,8 +74,8 @@ async fn test_committee_rotation_updates_evm_light_client() {
         &format!(
             "{wallet_env} \
              ./linera validator add \
-             --public-key {TEST_VALIDATOR_PUBLIC_KEY} \
-             --account-key {TEST_ACCOUNT_KEY} \
+             --public-key {validator_public_key} \
+             --account-key {account_key} \
              --address grpc:fake-validator:19100 \
              --votes 1 \
              --skip-online-check"

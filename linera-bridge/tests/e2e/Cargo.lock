@@ -3615,6 +3615,7 @@ dependencies = [
  "linera-sdk",
  "linera-storage",
  "linera-views",
+ "rand 0.8.5",
  "testcontainers",
  "tokio",
 ]
