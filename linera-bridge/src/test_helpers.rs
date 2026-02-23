@@ -327,41 +327,9 @@ pub fn call_contract<C: SolCall>(
     contract: Address,
     call: C,
 ) -> (C::Return, Vec<Log>, u64) {
-    let nonce = db
-        .cache
-        .accounts
-        .get(&deployer)
-        .map_or(0, |info| info.info.nonce);
-    let result = Context::mainnet()
-        .with_db(db)
-        .modify_tx_chained(|tx| {
-            tx.caller = deployer;
-            tx.nonce = nonce;
-            tx.kind = TxKind::Call(contract);
-            tx.data = Bytes::from(call.abi_encode());
-            tx.gas_limit = GAS_LIMIT;
-            tx.value = U256::ZERO;
-        })
-        .build_mainnet()
-        .replay_commit()
-        .expect("call transaction failed");
-
-    let gas_used = result.gas_used();
-    match result {
-        ExecutionResult::Success { output, logs, .. } => match output {
-            Output::Call(bytes) => {
-                let ret = C::abi_decode_returns(&bytes)
-                    .unwrap_or_else(|e| panic!("failed to decode return value: {e}"));
-                (ret, logs, gas_used)
-            }
-            other => panic!("expected Call output, got: {:?}", other),
-        },
-        ExecutionResult::Revert { output, .. } => {
-            panic!("call reverted: {}", hex::encode(&output));
-        }
-        ExecutionResult::Halt { reason, .. } => {
-            panic!("call halted: {:?}", reason);
-        }
+    match try_call_contract(db, deployer, contract, call) {
+        Ok(ret) => ret,
+        Err(msg) => panic!("{}", msg),
     }
 }
 
