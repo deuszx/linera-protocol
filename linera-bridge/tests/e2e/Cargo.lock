@@ -3553,7 +3553,7 @@ dependencies = [
 
 [[package]]
 name = "linera-base"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "allocative",
  "alloy-primitives",
@@ -3622,7 +3622,7 @@ dependencies = [
 
 [[package]]
 name = "linera-chain"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "allocative",
  "async-graphql",
@@ -3646,7 +3646,7 @@ dependencies = [
 
 [[package]]
 name = "linera-client"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "anyhow",
  "bcs",
@@ -3684,7 +3684,7 @@ dependencies = [
 
 [[package]]
 name = "linera-core"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "async-graphql",
  "async-trait",
@@ -3699,7 +3699,7 @@ dependencies = [
  "linera-storage",
  "linera-version",
  "linera-views",
- "lru 0.12.5",
+ "lru 0.15.0",
  "papaya",
  "prometheus",
  "rand 0.8.5",
@@ -3719,7 +3719,7 @@ dependencies = [
 
 [[package]]
 name = "linera-execution"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "allocative",
  "anyhow",
@@ -3740,7 +3740,7 @@ dependencies = [
  "linera-wasmer",
  "linera-wasmer-compiler-singlepass",
  "linera-witty",
- "lru 0.12.5",
+ "lru 0.15.0",
  "oneshot",
  "papaya",
  "prometheus",
@@ -3759,7 +3759,7 @@ dependencies = [
 
 [[package]]
 name = "linera-faucet-client"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "linera-base",
  "linera-client",
@@ -3780,7 +3780,7 @@ checksum = "c9198100e9ce61acd3c714a2e61eb19fc5b8e2178dd645e2d9061e61e6e1feef"
 
 [[package]]
 name = "linera-rpc"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3819,7 +3819,7 @@ dependencies = [
 
 [[package]]
 name = "linera-sdk"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "anyhow",
  "async-graphql",
@@ -3847,7 +3847,7 @@ dependencies = [
 
 [[package]]
 name = "linera-sdk-derive"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "convert_case 0.6.0",
  "proc-macro2",
@@ -3856,7 +3856,7 @@ dependencies = [
 
 [[package]]
 name = "linera-storage"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "async-trait",
  "bcs",
@@ -3877,7 +3877,7 @@ dependencies = [
 
 [[package]]
 name = "linera-version"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "anyhow",
  "async-graphql",
@@ -3897,7 +3897,7 @@ dependencies = [
 
 [[package]]
 name = "linera-views"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "allocative",
  "anyhow",
@@ -3932,7 +3932,7 @@ dependencies = [
 
 [[package]]
 name = "linera-views-derive"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "cfg_aliases",
  "deluxe",
@@ -4080,7 +4080,7 @@ dependencies = [
 
 [[package]]
 name = "linera-witty"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "anyhow",
  "cfg_aliases",
@@ -4094,7 +4094,7 @@ dependencies = [
 
 [[package]]
 name = "linera-witty-macros"
-version = "0.15.12"
+version = "0.15.13"
 dependencies = [
  "cfg_aliases",
  "heck 0.4.1",
@@ -4139,18 +4139,18 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "lru"
-version = "0.12.5"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "234cf4f4a04dc1f57e24b96cc0cd600cf2af460d4161ac5ecdd0af8e1f3b2a38"
+checksum = "227748d55f2f0ab4735d87fd623798cb6b664512fe979705f829c9f81c934465"
 dependencies = [
  "hashbrown 0.15.5",
 ]
 
 [[package]]
 name = "lru"
-version = "0.13.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "227748d55f2f0ab4735d87fd623798cb6b664512fe979705f829c9f81c934465"
+checksum = "0281c2e25e62316a5c9d98f2d2e9e95a37841afdaf4383c177dbb5c1dfab0568"
 dependencies = [
  "hashbrown 0.15.5",
 ]
