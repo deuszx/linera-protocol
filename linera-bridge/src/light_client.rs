@@ -243,7 +243,7 @@ mod tests {
                 call
             )
             .is_err(),
-            "should reject substituted keys that don'light_client match the blob"
+            "should reject substituted keys that don't match the blob"
         );
     }
 
@@ -259,7 +259,7 @@ mod tests {
 
     #[test]
     fn test_light_client_rejects_duplicate_signer() {
-        // This test needs a two-validator setup, so it can'light_client use TestLightClient.
+        // This test needs a two-validator setup, so it can't use TestLightClient.
         let secret_a = ValidatorSecretKey::generate();
         let public_a = secret_a.public();
         let addr_a = validator_evm_address(&public_a);

@@ -372,7 +372,7 @@ pub fn try_call_contract<C: SolCall>(
     deployer: Address,
     contract: Address,
     call: C,
-) -> Result<C::Return, String> {
+) -> Result<(C::Return, Vec<Log>, u64), String> {
     let nonce = db
         .cache
         .accounts
@@ -392,10 +392,14 @@ pub fn try_call_contract<C: SolCall>(
         .replay_commit()
         .expect("call transaction failed");
 
+    let gas_used = result.gas_used();
     match result {
-        ExecutionResult::Success { output, .. } => match output {
-            Output::Call(bytes) => C::abi_decode_returns(&bytes)
-                .map_err(|e| format!("failed to decode return value: {e}")),
+        ExecutionResult::Success { output, logs, .. } => match output {
+            Output::Call(bytes) => {
+                let ret = C::abi_decode_returns(&bytes)
+                    .map_err(|e| format!("failed to decode return value: {e}"))?;
+                Ok((ret, logs, gas_used))
+            }
             other => Err(format!("expected Call output, got: {:?}", other)),
         },
         ExecutionResult::Revert { output, .. } => {
