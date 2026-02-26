@@ -18,6 +18,13 @@ contract FungibleBridge is Microchain {
     IERC20 public immutable token;
     uint256 public depositNonce;
 
+    /// Emitted when ERC-20 tokens are moved into EVM bridge custody for a Linera credit.
+    /// @param source_chain_id EVM chain ID where this deposit transaction happened (e.g. Base mainnet ID).
+    /// @param target_chain_id Linera microchain ID that should receive the credit message.
+    /// @param target_application_id Linera application ID of the fungible app that should process the deposit.
+    /// @param target_account_owner Linera account owner bytes32 (e.g. Ed25519 owner/public-key hash) to credit.
+    /// @param token ERC-20 token contract address deposited into custody on this EVM chain.
+    /// @param amount Token amount to credit 1:1 on Linera.
     event DepositInitiated(
         uint256 source_chain_id,
         bytes32 target_chain_id,
@@ -40,6 +47,11 @@ contract FungibleBridge is Microchain {
         token = IERC20(_token);
     }
 
+    /// Deposits ERC-20 tokens into bridge custody and emits a canonical EVM->Linera deposit event.
+    /// @param targetChainId Linera destination microchain ID that should receive the minted/credited balance.
+    /// @param targetApplicationId Linera destination application ID (the fungible app instance on that chain).
+    /// @param targetAccountOwner Linera owner bytes32 identifying which account on the target chain is credited.
+    /// @param amount ERC-20 amount pulled from msg.sender and locked in this contract as custody.
     function transferToLinera(
         bytes32 targetChainId,
         bytes32 targetApplicationId,
