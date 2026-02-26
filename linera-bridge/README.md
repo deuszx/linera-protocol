@@ -147,6 +147,36 @@ let calldata: Vec<u8> = call.abi_encode();
 // light_client::SOURCE, microchain::SOURCE
 ```
 
+
+## Bridge verification interfaces (Rust)
+
+`src/interfaces.rs` defines API contracts that are intentionally **logic-free** and
+exist to unblock downstream implementation work:
+
+- `ClaimProofDecoder`: boundary that decodes user-submitted finalization proof/event payload into a canonical `BridgeClaim`.
+- `BridgeClaim`: normalized claim extracted from finalized EVM event/proof data (not a user-authored payload).
+- `ClaimId::derive`: deterministic claim key for deduplication / replay protection
+  stores.
+- `FinalityView` + `RootLookup`: trait boundaries for plugging different backends
+  (e.g. Linera RPC/indexer readers, contract-based root readers) into one verifier
+  flow without coupling to a specific data source.
+- `ClaimVerificationError`: deterministic error classes for protocol-level handling.
+
+In other words: this module is used as the contract between proof decoding,
+finality/root verification, and claim execution. On Linera, users submit an EVM
+finalization proof; verifier code decodes that proof into `BridgeClaim`, and
+`ClaimId` is then used to deduplicate/reject replays of the same source event.
+
+Why keep this at all if proof contains all transfer data? Because the proof bytes
+alone are not a stable cross-crate API. We still need one normalized post-decode
+shape (`BridgeClaim`), one deterministic replay key (`ClaimId`), and one shared
+error taxonomy (`ClaimVerificationError`) so decoder/verifier/executor components
+behave consistently.
+
+Non-goal: adding broad abstraction layers. The interfaces in `src/interfaces.rs`
+are intentionally limited to the current claim path and should grow only when the
+end-to-end flow requires it.
+
 ## Committee management
 
 Committees are stored per-epoch and must advance monotonically (epoch N can only be followed by epoch N+1).
