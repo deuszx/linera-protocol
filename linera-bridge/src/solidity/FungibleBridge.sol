@@ -7,6 +7,7 @@ import "Microchain.sol";
 
 interface IERC20 {
     function transfer(address to, uint256 amount) external returns (bool);
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
 }
 
 /// Bridges ERC20 tokens from a Linera microchain to Ethereum.
@@ -15,6 +16,16 @@ interface IERC20 {
 contract FungibleBridge is Microchain {
     bytes32 public immutable applicationId;
     IERC20 public immutable token;
+    uint256 public depositNonce;
+
+    event DepositInitiated(
+        uint256 source_chain_id,
+        bytes32 target_chain_id,
+        bytes32 target_application_id,
+        bytes32 target_account_owner,
+        address token,
+        uint256 amount
+    );
 
     constructor(
         address _lightClient,
@@ -27,6 +38,28 @@ contract FungibleBridge is Microchain {
     {
         applicationId = _applicationId;
         token = IERC20(_token);
+    }
+
+    function transferToLinera(
+        bytes32 targetChainId,
+        bytes32 targetApplicationId,
+        bytes32 targetAccountOwner,
+        uint256 amount
+    ) external {
+        require(token.transferFrom(msg.sender, address(this), amount), "token transferFrom failed");
+
+        unchecked {
+            depositNonce += 1;
+        }
+
+        emit DepositInitiated(
+            block.chainid,
+            targetChainId,
+            targetApplicationId,
+            targetAccountOwner,
+            address(token),
+            amount
+        );
     }
 
     function _onBlock(BridgeTypes.Block memory blockValue) internal override {
