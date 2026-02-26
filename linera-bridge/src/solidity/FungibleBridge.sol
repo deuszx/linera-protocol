@@ -49,7 +49,7 @@ contract FungibleBridge is Microchain {
 
     /// Deposits ERC-20 tokens into bridge custody and emits a canonical EVM->Linera deposit event.
     /// @param targetChainId Linera destination microchain ID that should receive the minted/credited balance.
-    /// @param targetApplicationId Linera destination application ID (the fungible app instance on that chain).
+    /// @param targetApplicationId Linera destination application ID (must match this bridge's configured applicationId).
     /// @param targetAccountOwner Linera owner bytes32 identifying which account on the target chain is credited.
     /// @param amount ERC-20 amount pulled from msg.sender and locked in this contract as custody.
     function transferToLinera(
@@ -58,6 +58,7 @@ contract FungibleBridge is Microchain {
         bytes32 targetAccountOwner,
         uint256 amount
     ) external {
+        require(targetApplicationId == applicationId, "invalid target application");
         require(token.transferFrom(msg.sender, address(this), amount), "token transferFrom failed");
 
         unchecked {
